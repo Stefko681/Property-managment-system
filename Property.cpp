@@ -66,7 +66,6 @@ void menuOptionOne(int &propertyCount, int &capacity, int &lastId, property *&pr
         capacity = newCapacity;
         properties = newProperties;
     }
-    newPropertyNullValues(capacity,properties);
     lastId++;
     properties[propertyCount].id = lastId;
     char strStatus[5] = {'F', 'R', 'E', 'E', '\0'};
@@ -296,6 +295,7 @@ void readFile(int &propertyCount, int &lastID, int &capacity, property *&propert
     if (capacity > 1) {
         delete [] properties;
         properties = new property[capacity];
+        newPropertyNullValues(capacity,properties);
     }
     char bufferText[BUFFER];
     for (int i = 0; i < propertyCount; ++i) {
