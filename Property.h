@@ -5,8 +5,6 @@
 #ifndef PROPERTY_MANAGMENT_SYSTEM_PROPERTY_H
 #define PROPERTY_MANAGMENT_SYSTEM_PROPERTY_H
 
-#endif //PROPERTY_MANAGMENT_SYSTEM_PROPERTY_H
-
 const int BUFFER = 1000;
 
 struct tenant {
@@ -33,7 +31,7 @@ char *strCpy(const char *sor, char *cpy);
 
 std::ofstream createFile();
 
-void printTitle(const int *propertyCount);
+void printTitle(const int &propertyCount);
 
 void printMenuOptions();
 
@@ -56,3 +54,9 @@ void menuOptionEight(const int &propertyCount, const int &lastID, const int &cap
 void readFile(int &propertyCount, int &lastID, int &capacity, property *&properties);
 
 void mainLoop();
+
+void newPropertyNullValues(int &capacity, property *&properties);
+
+void freePropertiesMemory(property *&properties, int &propertyCount);
+
+#endif //PROPERTY_MANAGMENT_SYSTEM_PROPERTY_H

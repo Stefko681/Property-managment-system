@@ -66,6 +66,7 @@ void menuOptionOne(int &propertyCount, int &capacity, int &lastId, property *&pr
         capacity = newCapacity;
         properties = newProperties;
     }
+    newPropertyNullValues(capacity,properties);
     lastId++;
     properties[propertyCount].id = lastId;
     char strStatus[5] = {'F', 'R', 'E', 'E', '\0'};
@@ -328,12 +329,34 @@ void readFile(int &propertyCount, int &lastID, int &capacity, property *&propert
     in.close();
 }
 
+void freePropertiesMemory(property *&properties, int &propertyCount) {
+    for (int i = 0; i < propertyCount; ++i) {
+        delete[] properties[i].address;
+        delete [] properties[i].type;
+        delete [] properties[i].status;
+        delete [] properties[i].newTenant.name;
+        delete [] properties[i].newTenant.number;
+    }
+    delete [] properties;
+}
+
+void newPropertyNullValues(int &capacity, property *&properties) {
+    for (int i = 0; i < capacity; ++i) {
+        properties[i].address = nullptr;
+        properties[i].type=nullptr;
+        properties[i].status = nullptr;
+        properties[i].newTenant.name = nullptr;
+        properties[i].newTenant.number = nullptr;
+    }
+}
+
 void mainLoop() {
     int lastId = 0;
     int propertyCount = 0;
     int menuOption = 0;
     int capacity = 1;
     property *properties = new property [capacity];
+    newPropertyNullValues(capacity,properties);
     readFile(propertyCount, lastId, capacity, properties);
     do {
         printTitle(propertyCount);
@@ -360,4 +383,5 @@ void mainLoop() {
                 break;
         }
     } while (menuOption != 8);
+    freePropertiesMemory(properties,propertyCount);
 }
