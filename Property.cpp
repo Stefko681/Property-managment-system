@@ -35,6 +35,7 @@ std::ofstream createFile() {
 }
 
 void printTitle(const int &propertyCount) {
+    std::cout<<std::endl;
     std::cout << "---Real Estate Manager---" << std::endl;
     std::cout << "Current properties in system: " << propertyCount << std::endl;
     std::cout << std::endl;
