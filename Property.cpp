@@ -34,8 +34,22 @@ std::ofstream createFile() {
     return out;
 }
 
+int readInt() {
+    int input;
+    while (true) {
+        std::cin >> input;
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(BUFFER, '\n');
+        } else {
+            std::cin.ignore(BUFFER, '\n');
+            return input;
+        }
+    }
+}
+
 void printTitle(const int &propertyCount) {
-    std::cout<<std::endl;
+    std::cout << std::endl;
     std::cout << "---Real Estate Manager---" << std::endl;
     std::cout << "Current properties in system: " << propertyCount << std::endl;
     std::cout << std::endl;
@@ -75,7 +89,6 @@ void menuOptionOne(int &propertyCount, int &capacity, int &lastId, property *&pr
     strCpy(strStatus, cpy1);
     strCpy(cpy1, properties[propertyCount].status);
     std::cout << "--- ADD PROPERTY ---" << std::endl;
-    std::cin.ignore();
     std::cout << "Enter type: ";
     char str1[BUFFER];
     std::cin.getline(str1, BUFFER);
@@ -111,10 +124,9 @@ void menuOptionTwo(int &propertyCount, property *&properties) {
     if (!propertyCount || !properties) {
         return;
     }
-    int removeIdValue;
     std::cout << "--- REMOVE PROPERTY ---" << std::endl;
     std::cout << "Enter property ID: ";
-    std::cin >> removeIdValue;
+    int removeIdValue = readInt();
     bool notFound = true;
     int index = 0;
     for (int i = 0; i < propertyCount; ++i) {
@@ -141,10 +153,9 @@ void menuOptionTwo(int &propertyCount, property *&properties) {
 }
 
 void menuOptionThree(property *&properties, int &propertyCount) {
-    int currId;
     std::cout << "--- RENT OUT PROPERTY ---" << std::endl;
     std::cout << "Enter property ID: ";
-    std::cin >> currId;
+    int currId = readInt();
     bool notFound = true;
     int index = 0;
     for (int i = 0; i < propertyCount; ++i) {
@@ -164,19 +175,16 @@ void menuOptionThree(property *&properties, int &propertyCount) {
     }
     std::cout << "Enter tenant name: ";
     char str1[BUFFER];
-    std::cin.ignore();
     std::cin.getline(str1, BUFFER);
-    char *newStr1 = new char[strLen(str1) + 1];
-    strCpy(str1, newStr1);
-    strCpy(newStr1, properties[index].newTenant.name);
-    delete []newStr1;
+    delete[]properties[index].newTenant.name;
+    properties[index].newTenant.name = new char[strLen(str1) + 1];
+    strCpy(str1, properties[index].newTenant.name);
     std::cout << "Enter tenant phone: ";
     char str2[BUFFER];
     std::cin.getline(str2, BUFFER);
-    char *newStr2 = new char[strLen(str2) + 1];
-    strCpy(str2, newStr2);
-    strCpy(newStr2, properties[index].newTenant.number);
-    delete []newStr2;
+    delete[]properties[index].newTenant.number;
+    properties[index].newTenant.number = new char[strLen(str2) + 1];
+    strCpy(str2, properties[index].newTenant.number);
     properties[index].isRented = true;
     char rentedText[] = {'R', 'E', 'N', 'T', 'E', 'D', '\0'};
     strCpy(rentedText, properties[index].status);
@@ -185,10 +193,9 @@ void menuOptionThree(property *&properties, int &propertyCount) {
 }
 
 void menuOptionFour(property *&properties, int &propertyCount) {
-    int currId;
     std::cout << "--- RELEASE PROPERTY ---" << std::endl;
     std::cout << "Enter property ID: ";
-    std::cin >> currId;
+    int currId = readInt();
     int index = 0;
     for (int i = 0; i < propertyCount; ++i) {
         if (properties[i].id == currId) {
@@ -205,6 +212,7 @@ void menuOptionFour(property *&properties, int &propertyCount) {
     properties[index].newTenant.number[0] = {'\0'};
     properties[index].newTenant.term = 0;
     properties[index].isRented = false;
+    delete[] properties[index].status;
     properties[index].status = new char[5];
     char freeStr[] = {'F', 'R', 'E', 'E', '\0'};
     strCpy(freeStr, properties[index].status);
@@ -296,7 +304,7 @@ void readFile(int &propertyCount, int &lastID, int &capacity, property *&propert
     if (capacity > 1) {
         delete [] properties;
         properties = new property[capacity];
-        newPropertyNullValues(capacity,properties);
+        newPropertyNullValues(capacity, properties);
     }
     char bufferText[BUFFER];
     for (int i = 0; i < propertyCount; ++i) {
@@ -344,7 +352,7 @@ void freePropertiesMemory(property *&properties, int &propertyCount) {
 void newPropertyNullValues(int &capacity, property *&properties) {
     for (int i = 0; i < capacity; ++i) {
         properties[i].address = nullptr;
-        properties[i].type=nullptr;
+        properties[i].type = nullptr;
         properties[i].status = nullptr;
         properties[i].newTenant.name = nullptr;
         properties[i].newTenant.number = nullptr;
@@ -357,12 +365,12 @@ void mainLoop() {
     int menuOption = 0;
     int capacity = 1;
     property *properties = new property [capacity];
-    newPropertyNullValues(capacity,properties);
+    newPropertyNullValues(capacity, properties);
     readFile(propertyCount, lastId, capacity, properties);
     do {
         printTitle(propertyCount);
         printMenuOptions();
-        std::cin >> menuOption;
+        menuOption = readInt();
         switch (menuOption) {
             case 1: menuOptionOne(propertyCount, capacity, lastId, properties);
                 break;
@@ -384,5 +392,5 @@ void mainLoop() {
                 break;
         }
     } while (menuOption != 8);
-    freePropertiesMemory(properties,propertyCount);
+    freePropertiesMemory(properties, propertyCount);
 }

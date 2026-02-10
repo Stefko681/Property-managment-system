@@ -31,6 +31,8 @@ char *strCpy(const char *sor, char *cpy);
 
 std::ofstream createFile();
 
+int readInt();
+
 void printTitle(const int &propertyCount);
 
 void printMenuOptions();
